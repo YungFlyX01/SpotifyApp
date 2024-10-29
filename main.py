@@ -2,13 +2,21 @@ import requests
 from base64 import b64encode
 import pandas as pd
 from flask import Flask, render_template, request, send_file, session, redirect, url_for
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Required for session management
 
 # Client credentials
-CLIENT_ID = "d7f6f193471e4aa6aa6c16f5324f2b89"
-CLIENT_SECRET = "ba1f31828acb4e1a9558f843a7b578e6"
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+
 
 def get_token():
     auth_token = b64encode(f"{CLIENT_ID}:{CLIENT_SECRET}".encode()).decode("utf-8")
