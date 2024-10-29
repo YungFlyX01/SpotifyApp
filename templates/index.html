@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>🎶 Music Search 🎶</h1>
+
+        <form method="POST" class="search-form">
+            <label for="artist_name">Enter Artist Name:</label>
+            <input type="text" id="artist_name" name="artist_name" placeholder="e.g. Cardi B" required>
+            <button type="submit" class="search-button">Search</button>
+        </form>
+
+        {% if artist_image_url %}
+        <div class="artist-info">
+            <img src="{{ artist_image_url }}" alt="Artist Image" class="artist-image">
+
+            <form action="/download" method="get">
+                <button type="submit" class="download-button">Download CSV</button>
+            </form>
+
+            <h2>Top Tracks:</h2>
+            <ul class="track-list">
+                {% for track in track_list %}
+                <li>{{ track.track }} - <a href="{{ track.music_url }}" target="_blank" class="listen-link">Listen</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>

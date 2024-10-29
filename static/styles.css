@@ -1,0 +1,205 @@
+/* General styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #FFFFFF;
+    /* Light background like Apple */
+    color: #333333;
+    /* Dark text for better contrast */
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 30px;
+    border-radius: 12px;
+    background-color: #F9F9F9;
+    /* Lighter gray for the container */
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for modern feel */
+}
+
+h1 {
+    text-align: center;
+    color: #1DB954;
+    /* Spotify green */
+    margin-bottom: 20px;
+    font-size: 28px;
+    /* Slightly larger heading */
+    font-weight: 600;
+    /* Bolder font for emphasis */
+}
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.search-form label {
+    margin-bottom: 5px;
+    color: #555;
+    /* Darker gray for labels */
+    font-weight: 500;
+    /* Semi-bold for labels */
+}
+
+input[type="text"] {
+    padding: 12px;
+    border: 1px solid #CCCCCC;
+    /* Light gray border */
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    /* White input field */
+    color: #333333;
+    /* Dark text */
+    margin-bottom: 15px;
+    /* Added margin for better spacing */
+    transition: border-color 0.3s;
+    /* Smooth transition */
+}
+
+input[type="text"]:focus {
+    border-color: #1DB954;
+    /* Green border on focus */
+    outline: none;
+    /* Remove outline */
+}
+
+.search-button {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #1DB954;
+    /* Green button */
+    color: #FFFFFF;
+    /* White text */
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    /* Semi-bold for buttons */
+    transition: background-color 0.3s;
+    /* Smooth transition */
+}
+
+.search-button:hover {
+    background-color: #14833B;
+    /* Darker green on hover */
+}
+
+.artist-info {
+    text-align: center;
+    margin-top: 20px;
+    /* Added margin for spacing */
+}
+
+.artist-image {
+    width: 100%;
+    max-width: 350px;
+    /* Adjusted size */
+    border-radius: 10px;
+    margin: 10px 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow */
+}
+
+.download-button {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #1DB954;
+    /* Green button */
+    color: #FFFFFF;
+    /* White text */
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    /* Semi-bold for buttons */
+    transition: background-color 0.3s;
+    /* Smooth transition */
+    margin-bottom: 20px;
+    /* Added margin for spacing */
+}
+
+.download-button:hover {
+    background-color: #14833B;
+    /* Darker green on hover */
+}
+
+.track-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    /* Added margin for spacing */
+}
+
+.track-list li {
+    margin: 8px 0;
+    /* Increased spacing between track items */
+}
+
+.listen-link {
+    color: #1DB954;
+    /* Green for links */
+    text-decoration: none;
+    /* No underline */
+    transition: color 0.3s;
+    /* Smooth transition */
+}
+
+.listen-link:hover {
+    color: #14833B;
+    /* Darker green on hover */
+    text-decoration: underline;
+    /* Underline on hover */
+}
+
+/* Prevent blue highlight on links */
+a {
+    color: inherit;
+    /* Inherit color from parent */
+    text-decoration: none;
+    /* No underline */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    input[type="text"],
+    .search-button,
+    .download-button {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .artist-image {
+        max-width: 100%;
+        /* Full width for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    input[type="text"],
+    .search-button,
+    .download-button {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .track-list li {
+        margin: 5px 0;
+        /* Reduced margin for smaller screens */
+    }
+}
