@@ -2,13 +2,11 @@ import requests
 from base64 import b64encode
 import pandas as pd
 from flask import Flask, render_template, request, send_file, session, redirect, url_for
+from io import StringIO
 from dotenv import load_dotenv
 import os
+
 load_dotenv()
-
-CLIENT_ID = os.getenv("CLIENT_ID")
-CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Required for session management
@@ -16,7 +14,6 @@ app.secret_key = 'your_secret_key'  # Required for session management
 # Client credentials
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-
 
 def get_token():
     auth_token = b64encode(f"{CLIENT_ID}:{CLIENT_SECRET}".encode()).decode("utf-8")
@@ -55,7 +52,6 @@ def index():
         
         if data:
             artist_image_url = data[0]['images'][0]['url']
-            
             artist_id = data[0]['id']
             track_url = f'https://api.spotify.com/v1/artists/{artist_id}/top-tracks?market=US'
             track_response = requests.get(track_url, headers=headers)
@@ -73,18 +69,26 @@ def index():
                     "music_url": music_url,
                 })
 
-            # Create DataFrame from the list of dictionaries
-            df = pd.DataFrame(track_list)
-            df.to_csv("music_data.csv", index=False, encoding="utf-8")
-            print('Data saved to music_data.csv')
+            # Store track list in the session
+            session['track_list'] = track_list  # Store track_list in session for download
 
     return render_template('index.html', artist_image_url=artist_image_url, track_list=track_list)
 
 @app.route('/download')
 def download():
     artist_name = session.get('artist_name', 'unknown_artist')  # Get artist name from session
+    track_list = session.get('track_list', [])
     filename = f"{artist_name}_data.csv"  # Create a dynamic filename
-    return send_file("music_data.csv", as_attachment=True, download_name=filename)
+
+    # Create a DataFrame from the track list
+    df = pd.DataFrame(track_list)
+
+    # Create an in-memory CSV
+    csv_data = StringIO()
+    df.to_csv(csv_data, index=False)
+    csv_data.seek(0)
+    
+    return send_file(csv_data, as_attachment=True, download_name=filename, mimetype='text/csv')
 
 if __name__ == '__main__':
     app.run()
