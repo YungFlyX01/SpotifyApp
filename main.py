@@ -1,7 +1,7 @@
 import requests
 from base64 import b64encode
 import pandas as pd
-from flask import Flask, render_template, request, send_file, session, redirect, url_for
+from flask import Flask, render_template, request, send_file, session
 from io import StringIO
 from dotenv import load_dotenv
 import os
@@ -9,9 +9,8 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Required for session management
+app.secret_key = 'your_secret_key'
 
-# Client credentials
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
@@ -69,21 +68,17 @@ def index():
                     "music_url": music_url,
                 })
 
-            # Store track list in the session
-            session['track_list'] = track_list  # Store track_list in session for download
+            session['track_list'] = track_list  # Store track_list in session
 
     return render_template('index.html', artist_image_url=artist_image_url, track_list=track_list)
 
 @app.route('/download')
 def download():
-    artist_name = session.get('artist_name', 'unknown_artist')  # Get artist name from session
+    artist_name = session.get('artist_name', 'unknown_artist')
     track_list = session.get('track_list', [])
-    filename = f"{artist_name}_data.csv"  # Create a dynamic filename
+    filename = f"{artist_name}_data.csv"
 
-    # Create a DataFrame from the track list
     df = pd.DataFrame(track_list)
-
-    # Create an in-memory CSV
     csv_data = StringIO()
     df.to_csv(csv_data, index=False)
     csv_data.seek(0)
@@ -91,4 +86,4 @@ def download():
     return send_file(csv_data, as_attachment=True, download_name=filename, mimetype='text/csv')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
