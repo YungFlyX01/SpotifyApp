@@ -4,6 +4,7 @@ import pandas as pd
 from flask import Flask, render_template, request, send_file, session
 from dotenv import load_dotenv
 import os
+import io
 
 # Load environment variables from .env file
 load_dotenv()
@@ -14,8 +15,6 @@ app.secret_key = 'your_secret_key'  # Required for session management
 # Client credentials from environment variables
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-
-
 
 def get_token():
     auth_token = b64encode(f"{CLIENT_ID}:{CLIENT_SECRET}".encode()).decode("utf-8")
@@ -54,7 +53,6 @@ def index():
         
         if data:
             artist_image_url = data[0]['images'][0]['url']
-            
             artist_id = data[0]['id']
             track_url = f'https://api.spotify.com/v1/artists/{artist_id}/top-tracks?market=US'
             track_response = requests.get(track_url, headers=headers)
@@ -74,16 +72,20 @@ def index():
 
             # Create DataFrame from the list of dictionaries
             df = pd.DataFrame(track_list)
-            df.to_csv("music_data.csv", index=False, encoding="utf-8")
-            print('Data saved to music_data.csv')
+            # Store the CSV data in memory
+            csv_data = df.to_csv(index=False, encoding="utf-8")
+            session['csv_data'] = csv_data  # Store CSV data in session for download
 
     return render_template('index.html', artist_image_url=artist_image_url, track_list=track_list)
 
 @app.route('/download')
 def download():
     artist_name = session.get('artist_name', 'unknown_artist')  # Get artist name from session
-    filename = f"{artist_name}_data.csv"  # Create a dynamic filename
-    return send_file("music_data.csv", as_attachment=True, download_name=filename)
+    csv_data = session.get('csv_data')  # Get CSV data from session
+    if csv_data:
+        # Use BytesIO to return the CSV data as a file response
+        return send_file(io.BytesIO(csv_data.encode()), as_attachment=True, download_name=f"{artist_name}_data.csv", mimetype="text/csv")
+    return "No data available for download", 404
 
 if __name__ == '__main__':
     app.run(debug=True)
